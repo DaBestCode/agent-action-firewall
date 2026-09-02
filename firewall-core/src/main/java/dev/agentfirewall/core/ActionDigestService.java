@@ -10,7 +10,7 @@ import java.util.Objects;
 
 /** Produces versioned SHA-256 bindings for canonical agent actions. */
 public final class ActionDigestService {
-    private static final String DOMAIN = "agent-action-firewall:action:v1";
+    private static final String DOMAIN = "agent-action-firewall:action:v2";
 
     public String digest(CanonicalAction action) {
         Objects.requireNonNull(action, "action must not be null");

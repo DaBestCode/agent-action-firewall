@@ -22,6 +22,7 @@
 
     <modules>
         <module>firewall-core</module>
+        <module>firewall-testkit</module>
     </modules>
 
     <properties>

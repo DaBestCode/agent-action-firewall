@@ -58,7 +58,7 @@ public final class HttpAction implements CanonicalAction {
         if (!METHOD.matcher(method).matches()) {
             throw new IllegalArgumentException("method must be a valid HTTP token");
         }
-        return method.toUpperCase(Locale.ROOT);
+        return method;
     }
 
     private static String normalizeTarget(URI target) {
@@ -74,19 +74,20 @@ public final class HttpAction implements CanonicalAction {
             throw new IllegalArgumentException("target must not contain user-info or a fragment");
         }
 
-        URI normalized = target.normalize();
         String normalizedScheme = scheme.toLowerCase(Locale.ROOT);
-        String host = normalized.getHost().toLowerCase(Locale.ROOT);
-        String renderedHost = host.indexOf(':') >= 0 ? "[" + host + "]" : host;
-        int port = normalized.getPort();
+        String host = target.getHost().toLowerCase(Locale.ROOT);
+        int port = target.getPort();
+        if (port > 65535) {
+            throw new IllegalArgumentException("target port must be at most 65535");
+        }
         boolean defaultPort = (normalizedScheme.equals("http") && port == 80)
                 || (normalizedScheme.equals("https") && port == 443);
-        String path = normalized.getRawPath();
+        String path = target.getRawPath();
         if (path == null || path.isEmpty()) {
             path = "/";
         }
-        String query = normalized.getRawQuery() == null ? "" : "?" + normalized.getRawQuery();
-        return normalizedScheme + "://" + renderedHost
+        String query = target.getRawQuery() == null ? "" : "?" + target.getRawQuery();
+        return normalizedScheme + "://" + host
                 + (port < 0 || defaultPort ? "" : ":" + port)
                 + path
                 + query;
@@ -96,11 +97,10 @@ public final class HttpAction implements CanonicalAction {
         if (mediaType == null) {
             return "";
         }
-        String normalized = mediaType.trim();
-        if (normalized.indexOf('\r') >= 0 || normalized.indexOf('\n') >= 0) {
+        if (mediaType.indexOf('\r') >= 0 || mediaType.indexOf('\n') >= 0) {
             throw new IllegalArgumentException("mediaType must not contain line breaks");
         }
-        return normalized;
+        return mediaType.trim();
     }
 
     private static String stripQuery(String target) {

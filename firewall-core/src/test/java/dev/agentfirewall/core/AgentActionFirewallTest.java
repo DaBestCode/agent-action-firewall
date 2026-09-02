@@ -56,6 +56,15 @@ class AgentActionFirewallTest {
     }
 
     @Test
+    void failsClosedWhenEngineReturnsNullAndRecordsFailure() {
+        AtomicReference<AuthorizationTraceEvent> recorded = new AtomicReference<>();
+        AgentActionFirewall firewall = new AgentActionFirewall(ignored -> null, recorded::set, CLOCK);
+        AuthorizationDecision decision = firewall.authorize(request());
+        assertFalse(decision.allowed());
+        assertEquals(AuthorizationReason.AUTHORIZATION_ENGINE_FAILURE, recorded.get().reason());
+    }
+
+    @Test
     void traceFailureDoesNotOverrideAuthorizationDecision() {
         AuthorizationDecision denied = AuthorizationDecision.deny(
                 "decision-2", AuthorizationReason.SCOPE_EXCEEDED, NOW);

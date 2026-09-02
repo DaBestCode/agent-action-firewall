@@ -2,6 +2,8 @@
 package dev.agentfirewall.core;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.lang.reflect.RecordComponent;
 import java.time.Instant;
@@ -11,6 +13,32 @@ import org.junit.jupiter.api.Test;
 
 class AuthorizationTraceEventTest {
     private static final String DIGEST = "sha256:" + "a".repeat(64);
+
+    @Test
+    void stripsQueryAndFragmentEvenForDirectEventConstruction() {
+        assertEquals("/purchases", event("request-1", "/purchases?token=secret#secret").resource());
+    }
+
+    @Test
+    void rejectsUserInfoWithoutEchoingSensitiveUri() {
+        var failure = assertThrows(IllegalArgumentException.class,
+                () -> event("request-1", "https://user:secret@example.com/path"));
+        assertFalse(failure.toString().contains("secret"));
+        assertEquals(null, failure.getCause());
+    }
+
+    @Test
+    void boundsAndValidatesLabels() {
+        assertThrows(IllegalArgumentException.class, () -> event("a".repeat(257), "/purchases"));
+        assertThrows(IllegalArgumentException.class, () -> event("id\nsecret", "/purchases"));
+        assertThrows(IllegalArgumentException.class, () -> event("request-1", "a".repeat(2049)));
+    }
+
+    private AuthorizationTraceEvent event(String id, String resource) {
+        return new AuthorizationTraceEvent(id, ActionProtocol.HTTP, "POST", resource, DIGEST,
+                Instant.EPOCH, "decision-1", AuthorizationOutcome.DENY,
+                AuthorizationReason.POLICY_DENIED, Instant.EPOCH, List.of());
+    }
 
     @Test
     void traceSchemaCannotCarryCredentialsOrRequestAttributes() {

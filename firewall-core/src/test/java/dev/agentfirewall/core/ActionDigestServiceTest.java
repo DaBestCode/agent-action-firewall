@@ -20,7 +20,7 @@ class ActionDigestServiceTest {
                 "{\"amount\":75}".getBytes(StandardCharsets.UTF_8));
 
         assertEquals(
-                "sha256:59265c78238835d78657537b15fd01cbf8bf7fbecfceebc52e78535849e1c145",
+                "sha256:571d7e5b19ba9ea5603ee7b83e476369616c3a22cb18855a896320b9b27f7c04",
                 digests.digest(action));
     }
 
@@ -45,6 +45,17 @@ class ActionDigestServiceTest {
 
         assertEquals(first.resource(), second.resource());
         assertNotEquals(digests.digest(first), digests.digest(second));
+    }
+
+    @Test
+    void doesNotCollapseMethodCaseOrRawPathVariants() {
+        HttpAction original = new HttpAction("GET", URI.create("https://example.com/a/b"), null, new byte[0]);
+        assertNotEquals(digests.digest(original), digests.digest(new HttpAction(
+                "get", URI.create("https://example.com/a/b"), null, new byte[0])));
+        for (String path : new String[] {"/a//b", "/a/./b", "/a/c/../b", "/a/%62"}) {
+            assertNotEquals(digests.digest(original), digests.digest(new HttpAction(
+                    "GET", URI.create("https://example.com" + path), null, new byte[0])));
+        }
     }
 
     @Test

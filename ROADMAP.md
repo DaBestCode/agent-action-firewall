@@ -3,8 +3,9 @@
 The plan assumes one focused developer and six weeks. Each week ends with a demonstrable, tested
 increment rather than a partially connected subsystem.
 
-Current progress: Days 1–3 implemented locally. Day 2 added canonical action binding and a reason
-taxonomy; Day 3 added atomic replay protection with expiry and concurrency coverage.
+Current progress: Days 1–3 pushed; Days 4–5 implemented locally for review. Day 4 adds bounded trace
+storage, filtering and retention. Day 5 adds the reusable engine contract kit and Week 1 API review.
+Next: Days 6–7, reproducible pinned upstream build and the first real authorization adapter.
 
 ## Week 1 — contracts, threat model, and executable core
 
@@ -22,8 +23,9 @@ boundaries.
 **Day 5:** Add contract-test kit for authorization engines and an intentionally small deterministic
 test engine. Review Week 1 API and document decisions.
 
-Exit criteria: the framework-neutral core compiles and passes tests; malformed inputs and engine
-failures deny access; no credential can appear in a trace event.
+Exit criteria: the framework-neutral core compiles and passes tests; malformed model inputs are
+rejected and engine failures deny access; trace schemas exclude credential objects, payloads and
+unclassified attributes. Transport-side label classification remains required.
 
 ## Week 2 — Open Agent Auth adapter and HTTP vertical slice
 

@@ -1,0 +1,173 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Agent Action Firewall trace record v1",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schemaVersion",
+        "recordedAt",
+        "event"
+    ],
+    "properties": {
+        "schemaVersion": {
+            "const": 1
+        },
+        "recordedAt": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "event": {
+            "$ref": "#/$defs/event"
+        }
+    },
+    "$defs": {
+        "event": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "requestId",
+                "protocol",
+                "operation",
+                "resource",
+                "requestDigest",
+                "requestedAt",
+                "decisionId",
+                "outcome",
+                "reason",
+                "decidedAt",
+                "policyIds"
+            ],
+            "properties": {
+                "requestId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256,
+                    "pattern": "^(?!\\s*$)[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+                },
+                "protocol": {
+                    "enum": [
+                        "HTTP",
+                        "MCP"
+                    ]
+                },
+                "operation": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "pattern": "^(?!\\s*$)[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+                },
+                "resource": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2048,
+                    "pattern": "^(?!\\s*$)[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+                },
+                "requestDigest": {
+                    "type": "string",
+                    "pattern": "^sha256:[0-9a-f]{64}$"
+                },
+                "requestedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "decisionId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256,
+                    "pattern": "^(?!\\s*$)[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+                },
+                "outcome": {
+                    "enum": [
+                        "ALLOW",
+                        "DENY"
+                    ]
+                },
+                "reason": {
+                    "enum": [
+                        "POLICY_MATCHED",
+                        "MALFORMED_ACTION",
+                        "MISSING_CREDENTIALS",
+                        "AOAT_ALGORITHM_REJECTED",
+                        "AOAT_SIGNATURE_INVALID",
+                        "AOAT_ISSUER_MISMATCH",
+                        "AOAT_AUDIENCE_MISMATCH",
+                        "AOAT_NOT_YET_VALID",
+                        "AOAT_EXPIRED",
+                        "WORKLOAD_IDENTITY_ALGORITHM_REJECTED",
+                        "WORKLOAD_IDENTITY_INVALID",
+                        "WORKLOAD_IDENTITY_EXPIRED",
+                        "WORKLOAD_BINDING_MISMATCH",
+                        "WORKLOAD_PROOF_INVALID",
+                        "REQUEST_DIGEST_MISMATCH",
+                        "POLICY_NOT_FOUND",
+                        "POLICY_DENIED",
+                        "SCOPE_EXCEEDED",
+                        "REPLAY_DETECTED",
+                        "PROTOCOL_CONFUSION",
+                        "DELEGATION_SIGNATURE_INVALID",
+                        "DELEGATION_SCOPE_EXPANDED",
+                        "DELEGATION_CHAIN_INVALID",
+                        "AUTHORIZATION_ENGINE_FAILURE"
+                    ]
+                },
+                "decidedAt": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "policyIds": {
+                    "type": "array",
+                    "maxItems": 32,
+                    "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256,
+                        "pattern": "^(?!\\s*$)[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+                    }
+                }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "outcome": {
+                                "const": "ALLOW"
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "reason": {
+                                "const": "POLICY_MATCHED"
+                            }
+                        }
+                    },
+                    "else": {
+                        "properties": {
+                            "reason": {
+                                "not": {
+                                    "const": "POLICY_MATCHED"
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "protocol": {
+                                "const": "HTTP"
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "resource": {
+                                "pattern": "^[^?#]+$"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

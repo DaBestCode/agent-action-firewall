@@ -19,9 +19,9 @@ class HttpActionTest {
                 "{}".getBytes(StandardCharsets.UTF_8));
 
         assertEquals(ActionProtocol.HTTP, action.protocol());
-        assertEquals("POST", action.operation());
-        assertEquals("https://example.com/purchases", action.resource());
-        assertEquals("https://example.com/purchases?currency=USD", action.target());
+        assertEquals("post", action.operation());
+        assertEquals("https://example.com/a/../purchases", action.resource());
+        assertEquals("https://example.com/a/../purchases?currency=USD", action.target());
         assertEquals("application/json", action.mediaType());
     }
 
@@ -34,6 +34,20 @@ class HttpActionTest {
         returned[1] = 9;
 
         assertArrayEquals(new byte[] {1, 2, 3}, action.body());
+    }
+
+    @Test
+    void preservesIpv6BracketsExactlyOnce() {
+        HttpAction action = new HttpAction("GET", URI.create("https://[::1]:443/a"), null, new byte[0]);
+        assertEquals("https://[::1]/a", action.target());
+    }
+
+    @Test
+    void rejectsInvalidPortAndHeaderControlsBeforeTrimming() {
+        assertThrows(IllegalArgumentException.class,
+                () -> new HttpAction("GET", URI.create("https://example.com:65536/a"), null, new byte[0]));
+        assertThrows(IllegalArgumentException.class,
+                () -> new HttpAction("GET", URI.create("https://example.com"), "\ntext/plain\n", new byte[0]));
     }
 
     @Test

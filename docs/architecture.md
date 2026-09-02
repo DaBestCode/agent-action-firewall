@@ -25,6 +25,7 @@ dependency. Transport and vendor adapters depend on the core contract; the core 
 ## Initial modules
 
 - `firewall-core`: request and decision models, authorization engine SPI, fail-closed orchestration.
+- `firewall-testkit`: reusable JUnit adapter contract and test-only deterministic engine. Never a runtime dependency.
 - `firewall-adapter-open-agent-auth`: pinned translation to Open Agent Auth. Planned for Week 2.
 - `firewall-gateway`: Spring Boot HTTP/MCP enforcement. Planned for Week 2.
 - `firewall-trace-store`: sanitized trace persistence and queries. Planned for Week 3.
@@ -41,3 +42,7 @@ dependency. Transport and vendor adapters depend on the core contract; the core 
 
 The core also owns the action-digest format and replay-protection SPI. See
 [`action-digest.md`](action-digest.md) for the byte-level interoperability contract.
+
+The bounded in-memory trace repository lives in core; durable trace persistence remains an adapter.
+See [trace storage](trace-storage.md), [test-kit usage](engine-testkit.md), and the
+[Week 1 review](decisions/0001-week-one-boundaries.md) for limitations and integration obligations.

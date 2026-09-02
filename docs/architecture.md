@@ -39,3 +39,5 @@ dependency. Transport and vendor adapters depend on the core contract; the core 
 5. Vendor-specific types remain behind `AgentAuthorizationEngine`.
 6. A delegated operation must never be broader than its parent authorization.
 
+The core also owns the action-digest format and replay-protection SPI. See
+[`action-digest.md`](action-digest.md) for the byte-level interoperability contract.

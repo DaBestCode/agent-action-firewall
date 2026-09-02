@@ -9,16 +9,17 @@ import java.util.Objects;
 public record AuthorizationDecision(
         String decisionId,
         AuthorizationOutcome outcome,
-        String reasonCode,
-        String explanation,
+        AuthorizationReason reason,
         Instant decidedAt,
         List<String> policyIds) {
 
     public AuthorizationDecision {
         decisionId = requireText(decisionId, "decisionId");
         outcome = Objects.requireNonNull(outcome, "outcome must not be null");
-        reasonCode = requireText(reasonCode, "reasonCode");
-        explanation = requireText(explanation, "explanation");
+        reason = Objects.requireNonNull(reason, "reason must not be null");
+        if (reason.outcome() != outcome) {
+            throw new IllegalArgumentException("reason outcome does not match decision outcome");
+        }
         decidedAt = Objects.requireNonNull(decidedAt, "decidedAt must not be null");
         policyIds = List.copyOf(Objects.requireNonNull(policyIds, "policyIds must not be null"));
     }
@@ -27,13 +28,20 @@ public record AuthorizationDecision(
         return outcome == AuthorizationOutcome.ALLOW;
     }
 
+    public String reasonCode() {
+        return reason.name();
+    }
+
+    public String explanation() {
+        return reason.explanation();
+    }
+
     public static AuthorizationDecision deny(
-            String decisionId, String reasonCode, String explanation, Instant decidedAt) {
+            String decisionId, AuthorizationReason reason, Instant decidedAt) {
         return new AuthorizationDecision(
                 decisionId,
                 AuthorizationOutcome.DENY,
-                reasonCode,
-                explanation,
+                reason,
                 decidedAt,
                 List.of());
     }
@@ -46,4 +54,3 @@ public record AuthorizationDecision(
         return value;
     }
 }
-

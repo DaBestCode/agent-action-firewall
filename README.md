@@ -11,13 +11,16 @@ The project is independent of its authorization engine. Its first engine adapter
 
 ## Current status
 
-Day 1 foundation:
+Days 1–3 foundation:
 
 - Apache-2.0 project and Java 17 Maven structure
 - Framework-neutral `AgentAuthorizationEngine`
 - Fail-closed `AgentActionFirewall`
 - Redacted credential container
 - Sanitized trace-sink boundary
+- Canonical HTTP and MCP action models with versioned SHA-256 request binding
+- Controlled authorization reason taxonomy
+- Atomic replay-protection SPI and in-memory implementation
 - Initial attack-corpus JSON Schema and wrong-audience case
 - Architecture, threat model, upstream pin, and six-week delivery plan
 
@@ -51,6 +54,7 @@ keeps build artifacts out of the user profile. See [ROADMAP.md](ROADMAP.md) for 
 
 - [Delivery roadmap](ROADMAP.md)
 - [Architecture](docs/architecture.md)
+- [Action digest format](docs/action-digest.md)
 - [Threat model](docs/threat-model.md)
 - [Open Agent Auth pin](docs/upstream-pin.md)
 - [Machine-readable upstream lock](upstream/open-agent-auth.lock.json)

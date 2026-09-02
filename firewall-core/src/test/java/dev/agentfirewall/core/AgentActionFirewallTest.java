@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 class AgentActionFirewallTest {
     private static final Instant NOW = Instant.parse("2026-09-01T12:00:00Z");
     private static final Clock CLOCK = Clock.fixed(NOW, ZoneOffset.UTC);
+    private static final String DIGEST = "sha256:" + "a".repeat(64);
 
     @Test
     void returnsEngineDecisionAndRecordsIt() {
@@ -23,8 +24,7 @@ class AgentActionFirewallTest {
         AuthorizationDecision allowed = new AuthorizationDecision(
                 "decision-1",
                 AuthorizationOutcome.ALLOW,
-                "POLICY_MATCHED",
-                "The requested operation matches the approved policy.",
+                AuthorizationReason.POLICY_MATCHED,
                 NOW,
                 List.of("policy-1"));
         AtomicReference<AuthorizationTraceEvent> traced = new AtomicReference<>();
@@ -58,7 +58,7 @@ class AgentActionFirewallTest {
     @Test
     void traceFailureDoesNotOverrideAuthorizationDecision() {
         AuthorizationDecision denied = AuthorizationDecision.deny(
-                "decision-2", "SCOPE_EXCEEDED", "Delegated scope was exceeded.", NOW);
+                "decision-2", AuthorizationReason.SCOPE_EXCEEDED, NOW);
         AgentActionFirewall firewall = new AgentActionFirewall(
                 ignored -> denied,
                 ignored -> { throw new IllegalStateException("trace store unavailable"); },
@@ -73,7 +73,7 @@ class AgentActionFirewallTest {
                 ActionProtocol.MCP,
                 "tools/call",
                 "inventory.purchase",
-                "sha256:abc123",
+                DIGEST,
                 NOW,
                 Map.of("amount", "75"),
                 new PresentedCredentials("aoat-token", "wit-token", "wpt-token"));

@@ -10,6 +10,8 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class AuthorizationTraceEventTest {
+    private static final String DIGEST = "sha256:" + "a".repeat(64);
+
     @Test
     void traceSchemaCannotCarryCredentialsOrRequestAttributes() {
         AgentActionRequest request = new AgentActionRequest(
@@ -17,15 +19,14 @@ class AuthorizationTraceEventTest {
                 ActionProtocol.HTTP,
                 "POST",
                 "/purchases",
-                "sha256:abc123",
+                DIGEST,
                 Instant.parse("2026-09-01T12:00:00Z"),
                 Map.of("sensitive-customer-reference", "customer-123"),
                 new PresentedCredentials("secret-aoat", "secret-wit", "secret-wpt"));
         AuthorizationDecision decision = new AuthorizationDecision(
                 "decision-1",
                 AuthorizationOutcome.DENY,
-                "SCOPE_EXCEEDED",
-                "secret-aoat accidentally echoed by an authorization adapter",
+                AuthorizationReason.SCOPE_EXCEEDED,
                 Instant.parse("2026-09-01T12:00:01Z"),
                 List.of("policy-1"));
 
@@ -36,7 +37,6 @@ class AuthorizationTraceEventTest {
         assertFalse(rendered.contains("secret-wit"));
         assertFalse(rendered.contains("secret-wpt"));
         assertFalse(rendered.contains("customer-123"));
-        assertFalse(rendered.contains("accidentally echoed"));
 
         for (RecordComponent component : AuthorizationTraceEvent.class.getRecordComponents()) {
             assertFalse(component.getType().equals(PresentedCredentials.class));

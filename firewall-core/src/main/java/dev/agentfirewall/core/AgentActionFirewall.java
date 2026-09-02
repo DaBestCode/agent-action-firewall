@@ -33,8 +33,7 @@ public final class AgentActionFirewall {
         } catch (RuntimeException engineFailure) {
             decision = AuthorizationDecision.deny(
                     UUID.randomUUID().toString(),
-                    "AUTHORIZATION_ENGINE_FAILURE",
-                    "Authorization could not be established.",
+                    AuthorizationReason.AUTHORIZATION_ENGINE_FAILURE,
                     Instant.now(clock));
         }
 

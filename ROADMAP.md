@@ -3,6 +3,9 @@
 The plan assumes one focused developer and six weeks. Each week ends with a demonstrable, tested
 increment rather than a partially connected subsystem.
 
+Current progress: Days 1–3 implemented locally. Day 2 added canonical action binding and a reason
+taxonomy; Day 3 added atomic replay protection with expiry and concurrency coverage.
+
 ## Week 1 — contracts, threat model, and executable core
 
 **Day 1:** Repository setup, Apache-2.0 licensing, Maven structure, stable authorization interface,
@@ -93,4 +96,3 @@ Exit criteria: forged, reordered, or broadened delegations are rejected and expl
 **Day 29:** Harden configuration, container images, SBOM, dependency review, and documentation.
 
 **Day 30:** Record demo, publish benchmark methodology, review security claims, and prepare v0.1.0.
-

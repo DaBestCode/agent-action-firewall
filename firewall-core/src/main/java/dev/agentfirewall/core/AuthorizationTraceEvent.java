@@ -20,7 +20,7 @@ public record AuthorizationTraceEvent(
         Instant requestedAt,
         String decisionId,
         AuthorizationOutcome outcome,
-        String reasonCode,
+        AuthorizationReason reason,
         Instant decidedAt,
         List<String> policyIds) {
 
@@ -33,7 +33,10 @@ public record AuthorizationTraceEvent(
         requestedAt = Objects.requireNonNull(requestedAt, "requestedAt must not be null");
         decisionId = Objects.requireNonNull(decisionId, "decisionId must not be null");
         outcome = Objects.requireNonNull(outcome, "outcome must not be null");
-        reasonCode = Objects.requireNonNull(reasonCode, "reasonCode must not be null");
+        reason = Objects.requireNonNull(reason, "reason must not be null");
+        if (reason.outcome() != outcome) {
+            throw new IllegalArgumentException("reason outcome does not match trace outcome");
+        }
         decidedAt = Objects.requireNonNull(decidedAt, "decidedAt must not be null");
         policyIds = List.copyOf(Objects.requireNonNull(policyIds, "policyIds must not be null"));
     }
@@ -51,8 +54,12 @@ public record AuthorizationTraceEvent(
                 request.requestedAt(),
                 decision.decisionId(),
                 decision.outcome(),
-                decision.reasonCode(),
+                decision.reason(),
                 decision.decidedAt(),
                 decision.policyIds());
+    }
+
+    public String reasonCode() {
+        return reason.name();
     }
 }

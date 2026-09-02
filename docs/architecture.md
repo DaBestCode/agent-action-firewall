@@ -1,0 +1,41 @@
+# Architecture
+
+Agent Action Firewall is an enforcement boundary for MCP and HTTP agent actions. The project is
+organized as a hexagonal application so transport, authorization implementation, trace storage,
+and replay storage can evolve independently.
+
+```text
+MCP / HTTP adapter
+       |
+       v
+AgentActionRequest ----> AgentActionFirewall ----> AgentAuthorizationEngine
+                                |                         |
+                                v                         v
+                      AuthorizationTraceSink      Open Agent Auth adapter
+                                |
+                                v
+                       sanitized trace store
+```
+
+## Dependency rule
+
+Dependencies point inward. `firewall-core` has no Spring, MCP, persistence, JSON, or Open Agent Auth
+dependency. Transport and vendor adapters depend on the core contract; the core never imports them.
+
+## Initial modules
+
+- `firewall-core`: request and decision models, authorization engine SPI, fail-closed orchestration.
+- `firewall-adapter-open-agent-auth`: pinned translation to Open Agent Auth. Planned for Week 2.
+- `firewall-gateway`: Spring Boot HTTP/MCP enforcement. Planned for Week 2.
+- `firewall-trace-store`: sanitized trace persistence and queries. Planned for Week 3.
+- `firewall-attack-runner`: attack-corpus execution. Planned for Week 4.
+
+## Security invariants
+
+1. Failure to establish authorization results in denial.
+2. Raw credentials never enter traces, metrics, exception messages, or model `toString()` output.
+3. Trace-store failure does not turn denial into allowance or allowance into denial.
+4. Every request carries a digest of the canonical operation that was authorized.
+5. Vendor-specific types remain behind `AgentAuthorizationEngine`.
+6. A delegated operation must never be broader than its parent authorization.
+

@@ -1,0 +1,41 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://agent-action-firewall.dev/schema/attack-case.schema.json",
+    "title": "Agent Action Firewall Attack Case",
+    "type": "object",
+    "required": ["id", "category", "description", "mutation", "expectedOutcome", "expectedReasonCode"],
+    "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$" },
+        "category": {
+            "enum": [
+                "token-tampering",
+                "identity-confusion",
+                "replay",
+                "scope-escalation",
+                "delegation-chain",
+                "context-leakage",
+                "protocol-confusion"
+            ]
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "baseFixture": { "type": "string" },
+        "mutation": {
+            "type": "object",
+            "required": ["target", "operation"],
+            "properties": {
+                "target": { "type": "string" },
+                "operation": { "enum": ["replace", "remove", "duplicate", "reorder", "replay"] },
+                "value": {}
+            },
+            "additionalProperties": false
+        },
+        "expectedOutcome": { "const": "DENY" },
+        "expectedReasonCode": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]+$" },
+        "references": {
+            "type": "array",
+            "items": { "type": "string", "format": "uri" }
+        }
+    },
+    "additionalProperties": false
+}
+

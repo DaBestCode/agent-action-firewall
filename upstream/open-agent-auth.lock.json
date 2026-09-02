@@ -1,0 +1,6 @@
+{
+    "repository": "https://github.com/alibaba/open-agent-auth.git",
+    "commit": "d75da121a66f8b2ae5be009a98e050fd1dc4c1e6",
+    "artifactVersion": "0.1.0-beta.1-SNAPSHOT",
+    "license": "Apache-2.0"
+}

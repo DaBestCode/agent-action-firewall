@@ -1,0 +1,17 @@
+{
+    "id": "aoat-wrong-audience",
+    "category": "identity-confusion",
+    "description": "An otherwise valid AOAT is presented to a resource server outside its audience.",
+    "baseFixture": "fixtures/valid-mcp-tool-call.json",
+    "mutation": {
+        "target": "/credentials/aoat/claims/aud",
+        "operation": "replace",
+        "value": "https://attacker.example/resource-server"
+    },
+    "expectedOutcome": "DENY",
+    "expectedReasonCode": "AOAT_AUDIENCE_MISMATCH",
+    "references": [
+        "https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.3"
+    ]
+}
+

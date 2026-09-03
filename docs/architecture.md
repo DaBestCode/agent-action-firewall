@@ -26,7 +26,7 @@ dependency. Transport and vendor adapters depend on the core contract; the core 
 
 - `firewall-core`: request and decision models, authorization engine SPI, fail-closed orchestration.
 - `firewall-testkit`: reusable JUnit adapter contract and test-only deterministic engine. Never a runtime dependency.
-- `firewall-adapter-open-agent-auth`: pinned translation to Open Agent Auth. Planned for Week 2.
+- `firewall-adapter-open-agent-auth`: pinned, opt-in internal translation to Open Agent Auth. Production configuration pending.
 - `firewall-gateway`: Spring Boot HTTP/MCP enforcement. Planned for Week 2.
 - `firewall-trace-store`: sanitized trace persistence and queries. Planned for Week 3.
 - `firewall-attack-runner`: attack-corpus execution. Planned for Week 4.

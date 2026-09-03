@@ -15,7 +15,8 @@ public record AgentActionRequest(
         String requestDigest,
         Instant requestedAt,
         Map<String, String> attributes,
-        PresentedCredentials credentials) {
+        PresentedCredentials credentials,
+        CanonicalAction action) {
 
     private static final Pattern SHA_256 = Pattern.compile("sha256:[0-9a-f]{64}");
 
@@ -28,6 +29,18 @@ public record AgentActionRequest(
         requestedAt = Objects.requireNonNull(requestedAt, "requestedAt must not be null");
         attributes = Map.copyOf(Objects.requireNonNull(attributes, "attributes must not be null"));
         credentials = Objects.requireNonNull(credentials, "credentials must not be null");
+        if (action != null && (protocol != action.protocol()
+                || !operation.equals(action.operation()) || !resource.equals(action.resource())
+                || !requestDigest.equals(new ActionDigestService().digest(action)))) {
+            throw new IllegalArgumentException("action must match request metadata and digest");
+        }
+    }
+
+    /** Legacy metadata-only request. Real adapters may reject it when raw action binding is needed. */
+    public AgentActionRequest(String requestId, ActionProtocol protocol, String operation,
+            String resource, String requestDigest, Instant requestedAt,
+            Map<String, String> attributes, PresentedCredentials credentials) {
+        this(requestId, protocol, operation, resource, requestDigest, requestedAt, attributes, credentials, null);
     }
 
     public static AgentActionRequest fromAction(
@@ -47,7 +60,8 @@ public record AgentActionRequest(
                 digestService.digest(action),
                 requestedAt,
                 attributes,
-                credentials);
+                credentials,
+                action);
     }
 
     private static String requireText(String value, String name) {

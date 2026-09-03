@@ -3,9 +3,10 @@
 The plan assumes one focused developer and six weeks. Each week ends with a demonstrable, tested
 increment rather than a partially connected subsystem.
 
-Current progress: Days 1–3 pushed; Days 4–5 implemented locally for review. Day 4 adds bounded trace
-storage, filtering and retention. Day 5 adds the reusable engine contract kit and Week 1 API review.
-Next: Days 6–7, reproducible pinned upstream build and the first real authorization adapter.
+Current progress: Days 1–5 pushed; Days 6–7 implemented locally for review. The pinned core builds
+reproducibly and the internal adapter maps tokens/HTTP context into the real upstream API. There is
+no public production factory yet; adapter tests use synthetic validation layers.
+Next: Days 8–9, reviewed trust/policy/binding configuration and the HTTP gateway slice.
 
 ## Week 1 — contracts, threat model, and executable core
 

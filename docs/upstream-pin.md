@@ -14,14 +14,15 @@ The first adapter targets this exact upstream revision:
 
 The same revision is recorded in the machine-readable
 [`upstream/open-agent-auth.lock.json`](../upstream/open-agent-auth.lock.json). The Week 2 adapter
-build will consume that lock rather than a branch or tag.
+build consumes that lock rather than a branch or tag. It also verifies the recorded JAR/POM hashes.
 
-The upstream artifacts are not currently published to Maven Central. The adapter build must not
-silently resolve a moving branch. Until a reproducible package is available, CI will build the
-upstream source at this commit into an isolated local Maven repository before compiling the adapter.
+The integration builds this exact source revision into an isolated local Maven repository rather
+than relying on published SNAPSHOT artifacts. The scripts and repeat-build evidence are described in
+[the adapter guide](open-agent-auth-adapter.md). CI automation is not installed yet.
 
 No Open Agent Auth class may appear in the firewall's public API. All translation belongs in the
-future `firewall-adapter-open-agent-auth` module behind `AgentAuthorizationEngine`.
+`firewall-adapter-open-agent-auth` module behind `AgentAuthorizationEngine`. The internal engine has
+no public production factory until its trust configuration is reviewed.
 
 Upgrades require:
 

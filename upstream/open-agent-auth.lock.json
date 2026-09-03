@@ -2,5 +2,10 @@
     "repository": "https://github.com/alibaba/open-agent-auth.git",
     "commit": "d75da121a66f8b2ae5be009a98e050fd1dc4c1e6",
     "artifactVersion": "0.1.0-beta.1-SNAPSHOT",
-    "license": "Apache-2.0"
+    "license": "Apache-2.0",
+    "coreJarSha256": "060fd02e5694e31f55e3f96fcf8008079bf07ff21c8af2d918e2209ea32c112c",
+    "corePomSha256": "a1511dd8c2e7b12a53b5b04e59462f6fa45fe63f78170b11d80111758fdd7318",
+    "parentPomSha256": "5ffafe304293328e4b84082bf1cf0d4257e368e12033e25f33d7dd4eca05daeb",
+    "verifiedJava": "17.0.20.1",
+    "verifiedMaven": "3.9.16"
 }

@@ -11,7 +11,7 @@ The project is independent of its authorization engine. Its first engine adapter
 
 ## Current status
 
-Days 1–5 foundation:
+Days 1–7 foundation and internal adapter:
 
 - Apache-2.0 project and Java 17 Maven structure
 - Framework-neutral `AgentAuthorizationEngine`
@@ -23,11 +23,14 @@ Days 1–5 foundation:
 - Atomic replay-protection SPI and in-memory implementation
 - Versioned, bounded in-memory trace storage with filtering and receipt-time retention
 - Reusable authorization-engine contract tests and an explicitly test-only deterministic engine
+- Reproducible pinned upstream core build with JAR/POM checksum checks
+- Internal Open Agent Auth token/context bridge with fail-closed result guards
 - Initial attack-corpus JSON Schema and wrong-audience case
 - Architecture, threat model, upstream pin, and six-week delivery plan
 
-`firewall-core` and `firewall-testkit` are active today. Gateway, Open Agent Auth adapter, durable trace
-persistence, and attack runner modules will be introduced as their vertical slices become executable.
+`firewall-core` and `firewall-testkit` are active by default. The internal Open Agent Auth adapter is
+opt-in and not production-configured yet. Gateway, durable trace persistence, and attack runner
+modules will be introduced as their vertical slices become executable.
 Use `firewall-testkit` only with test scope; it does not verify real credentials.
 
 ## Build
@@ -61,6 +64,7 @@ keeps build artifacts out of the user profile. See [ROADMAP.md](ROADMAP.md) for 
 - [Trace storage and sanitization limits](docs/trace-storage.md)
 - [Engine test kit](docs/engine-testkit.md)
 - [Week 1 API decisions and limitations](docs/decisions/0001-week-one-boundaries.md)
+- [Pinned build and internal adapter](docs/open-agent-auth-adapter.md)
 - [Threat model](docs/threat-model.md)
 - [Open Agent Auth pin](docs/upstream-pin.md)
 - [Machine-readable upstream lock](upstream/open-agent-auth.lock.json)
@@ -68,3 +72,4 @@ keeps build artifacts out of the user profile. See [ROADMAP.md](ROADMAP.md) for 
 ## License
 
 Apache License 2.0. See [LICENSE](LICENSE).
+Optional upstream dependency attribution: [THIRD_PARTY.md](THIRD_PARTY.md).

@@ -1,13 +1,13 @@
-# Open Agent Auth adapter — Days 6–7
+# Open Agent Auth adapter — pinned build and translation bridge
 
 ## Status
 
-The pinned core builds and the internal translation bridge compiles against it. There is deliberately
-no public production factory yet. Day 8 must supply reviewed issuer/key/algorithm/audience/time
-configuration, policy evaluation and signed-action binding before exposing one.
+The pinned core builds and the internal translation bridge compiles against it. Days 8–9 add the
+separate public experimental `HttpAuthorizationProfile`, documented in [HTTP profile](http-profile.md).
+The historical five-layer bridge below remains internal; it is not used by that public factory.
 
 All upstream imports are confined to `firewall-adapter-open-agent-auth`. Its implementation classes
-are package-private and implement our `AgentAuthorizationEngine`. The adapter module is opt-in via
+are package-private except the firewall-owned configuration/factory API. The adapter is opt-in via
 the `open-agent-auth` Maven profile. Default core/test-kit builds do not require upstream artifacts.
 
 ## Build from the lock
@@ -69,7 +69,7 @@ unverified policy IDs or upstream error metadata are copied into firewall decisi
 
 ## Structural guards and evidence
 
-The adapter requires five known layers in order, and rejects empty/partial/contradictory success
+The internal five-layer bridge requires five known layers in order, and rejects empty/partial/contradictory success
 reports. These are configuration/result guards, not proof that a validator implementation is trusted.
 
 Confirmed source observations at the pin:
@@ -97,10 +97,10 @@ six shared contract tests. They do not establish signature, issuer, audience, ex
 policy correctness. The first fixture run exposed missing required AOAT claims; the fixtures were
 corrected rather than relaxing parsing.
 
-Day 8 must verify the actual signed digest against the forwarded action, configure real validators,
-map precise validation reasons, and integrate replay retention using verified claims. Putting a
-digest in context metadata alone does not authorize or authenticate it. Policy IDs are intentionally
-omitted until they can be taken from verified evidence.
+The public profile now verifies the signed action digest, trust, binding, exact local policy and
+replay retention. Its real-signature tests are separate from these 14 synthetic-layer tests.
+Policy IDs are emitted only after successful verification and lookup in administrator-owned policy.
+The public profile is intentionally not advertised as the upstream five-layer factory or general OAA conformance.
 
 Upstream validators/parsers have their own logging, sometimes including exceptions or claims.
 Suppressing messages in this bridge does not sanitize upstream logs. A reviewed logging policy,

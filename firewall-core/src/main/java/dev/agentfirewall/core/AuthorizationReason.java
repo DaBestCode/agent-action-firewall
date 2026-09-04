@@ -12,10 +12,12 @@ public enum AuthorizationReason {
     AOAT_AUDIENCE_MISMATCH(AuthorizationOutcome.DENY, "The authorization token audience does not match."),
     AOAT_NOT_YET_VALID(AuthorizationOutcome.DENY, "The authorization token is not yet valid."),
     AOAT_EXPIRED(AuthorizationOutcome.DENY, "The authorization token has expired."),
+    AOAT_LIFETIME_EXCEEDED(AuthorizationOutcome.DENY, "The authorization token exceeds the accepted lifetime."),
     WORKLOAD_IDENTITY_ALGORITHM_REJECTED(
             AuthorizationOutcome.DENY, "The workload identity algorithm is not allowed."),
     WORKLOAD_IDENTITY_INVALID(AuthorizationOutcome.DENY, "The workload identity is invalid."),
     WORKLOAD_IDENTITY_EXPIRED(AuthorizationOutcome.DENY, "The workload identity has expired."),
+    WORKLOAD_IDENTITY_LIFETIME_EXCEEDED(AuthorizationOutcome.DENY, "The workload identity exceeds the accepted lifetime."),
     WORKLOAD_BINDING_MISMATCH(AuthorizationOutcome.DENY, "The workload identity binding does not match."),
     WORKLOAD_PROOF_INVALID(AuthorizationOutcome.DENY, "The workload proof is invalid."),
     REQUEST_DIGEST_MISMATCH(AuthorizationOutcome.DENY, "The action does not match the authorized digest."),

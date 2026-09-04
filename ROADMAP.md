@@ -3,10 +3,11 @@
 The plan assumes one focused developer and six weeks. Each week ends with a demonstrable, tested
 increment rather than a partially connected subsystem.
 
-Current progress: Days 1–5 pushed; Days 6–7 implemented locally for review. The pinned core builds
-reproducibly and the internal adapter maps tokens/HTTP context into the real upstream API. There is
-no public production factory yet; adapter tests use synthetic validation layers.
-Next: Days 8–9, reviewed trust/policy/binding configuration and the HTTP gateway slice.
+Current progress: Days 1–7 pushed; Days 8–9 implemented locally for review. A deliberately narrow
+signed HTTP profile and a Spring Boot filter pass an embedded-server allow/tamper/replay test.
+This is an experimental firewall-specific profile, not full upstream-protocol conformance or a
+production deployment. See docs/http-profile.md for supported algorithms and transport constraints.
+Next: Days 10–11, containerized HTTP verification and MCP canonical JSON/action binding.
 
 ## Week 1 — contracts, threat model, and executable core
 

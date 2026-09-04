@@ -11,3 +11,8 @@ The build retains upstream source headers and builds the unmodified core in an i
 No upstream source or binaries are committed into this repository. Distribution packaging must
 preserve applicable third-party licenses/notices for bundled dependencies; the dependency SBOM and
 distribution review remain part of the release milestone.
+
+The optional HTTP gateway uses Spring Boot 3.3.11 and its managed dependencies, matching the pinned
+upstream baseline for this compatibility experiment. Nimbus JOSE JWT supplies cryptographic
+verification inside the adapter. These are Maven dependencies, not copied source. This version
+selection is not a current vulnerability assessment; dependency/security updates must precede release.

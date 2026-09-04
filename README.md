@@ -3,7 +3,8 @@
 Agent Action Firewall is an independent project building a fail-closed authorization gateway for
 AI-agent actions over MCP and HTTP. Its intended gateway will verify human authorization, workload
 identity and policy constraints, then record a data-minimized decision trace. The current milestone
-is a tested core and test kit, not a deployed or cryptographically complete gateway.
+includes an experimental signed HTTP profile and an in-process Spring Boot enforcement filter.
+It is not production-ready or a general-purpose reverse proxy.
 
 The project is independent of its authorization engine. Its first engine adapter will target
 [Alibaba Open Agent Auth](https://github.com/alibaba/open-agent-auth) at commit
@@ -11,7 +12,7 @@ The project is independent of its authorization engine. Its first engine adapter
 
 ## Current status
 
-Days 1–7 foundation and internal adapter:
+Days 1–9 foundation and HTTP vertical slice:
 
 - Apache-2.0 project and Java 17 Maven structure
 - Framework-neutral `AgentAuthorizationEngine`
@@ -25,12 +26,15 @@ Days 1–7 foundation and internal adapter:
 - Reusable authorization-engine contract tests and an explicitly test-only deterministic engine
 - Reproducible pinned upstream core build with JAR/POM checksum checks
 - Internal Open Agent Auth token/context bridge with fail-closed result guards
+- Public, narrowly scoped HTTP profile with real signatures, explicit bindings and exact-action policies
+- Signed action/token binding and atomic single-use proof enforcement
+- Spring Boot filter and localhost integration test with a protected service
 - Initial attack-corpus JSON Schema and wrong-audience case
 - Architecture, threat model, upstream pin, and six-week delivery plan
 
-`firewall-core` and `firewall-testkit` are active by default. The internal Open Agent Auth adapter is
-opt-in and not production-configured yet. Gateway, durable trace persistence, and attack runner
-modules will be introduced as their vertical slices become executable.
+`firewall-core` and `firewall-testkit` are active by default. The Open Agent Auth adapter and HTTP
+gateway are opt-in through the guarded build below. Durable trace persistence, explorer and attack
+runner remain planned; the initial corpus files are not an executable security suite.
 Use `firewall-testkit` only with test scope; it does not verify real credentials.
 
 ## Build
@@ -42,6 +46,9 @@ Prerequisites:
 
 ```bash
 mvn -Dmaven.repo.local=.m2/repository verify
+
+# After building the pinned upstream core (see docs/open-agent-auth-adapter.md):
+bash scripts/verify-open-agent-auth.sh --offline
 ```
 
 The current build was verified with OpenJDK 17.0.20.1 and Maven 3.9.16. A repository-local Maven cache
@@ -65,6 +72,7 @@ keeps build artifacts out of the user profile. See [ROADMAP.md](ROADMAP.md) for 
 - [Engine test kit](docs/engine-testkit.md)
 - [Week 1 API decisions and limitations](docs/decisions/0001-week-one-boundaries.md)
 - [Pinned build and internal adapter](docs/open-agent-auth-adapter.md)
+- [Signed HTTP profile and gateway limitations](docs/http-profile.md)
 - [Threat model](docs/threat-model.md)
 - [Open Agent Auth pin](docs/upstream-pin.md)
 - [Machine-readable upstream lock](upstream/open-agent-auth.lock.json)

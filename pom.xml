@@ -30,6 +30,7 @@
             <id>open-agent-auth</id>
             <modules>
                 <module>firewall-adapter-open-agent-auth</module>
+                <module>firewall-gateway-http</module>
             </modules>
         </profile>
     </profiles>

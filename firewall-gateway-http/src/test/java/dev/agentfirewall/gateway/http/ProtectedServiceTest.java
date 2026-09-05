@@ -30,6 +30,10 @@ class ProtectedServiceTest {
     private static final byte[] BODY = "{\"amount\":5}".getBytes(StandardCharsets.UTF_8);
 
     @Test void realSignedHttpFlowAllowsOnceDeniesTamperingAndRecordsTraces() throws Exception {
+        verifyFlow(null);
+    }
+
+    static void verifyFlow(URI downstream) throws Exception {
         var clock = Clock.systemUTC();
         var now = clock.instant().truncatedTo(java.time.temporal.ChronoUnit.SECONDS);
         var issuer = new RSAKeyGenerator(2048).algorithm(JWSAlgorithm.RS256).generate();
@@ -55,7 +59,10 @@ class ProtectedServiceTest {
         try (var context = new SpringApplicationBuilder(Service.class)
                 .properties(Map.of("server.port", "0", "server.address", "127.0.0.1", "spring.main.banner-mode", "off",
                         "logging.level.root", "OFF", "logging.level.com.alibaba.openagentauth", "OFF"))
-                .initializers(application -> application.getBeanFactory().registerSingleton("firewall", firewall)).run()) {
+                .initializers(application -> {
+                    application.getBeanFactory().registerSingleton("firewall", firewall);
+                    application.getBeanFactory().registerSingleton("testDownstream", new Downstream(downstream));
+                }).run()) {
             int port = ((ServletWebServerApplicationContext) context).getWebServer().getPort();
             var uri = URI.create("http://127.0.0.1:" + port + "/buy");
             var client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build();
@@ -81,16 +88,29 @@ class ProtectedServiceTest {
     @RestController
     static class Service {
         final AtomicInteger calls = new AtomicInteger();
+        private final Downstream downstream;
+        Service(Downstream downstream) { this.downstream = downstream; }
         @Bean FilterRegistrationBean<ActionFirewallFilter> registration(AgentActionFirewall firewall) {
             return FirewallRegistration.allRoutes(new ActionFirewallFilter(firewall, ORIGIN, 1024, Clock.systemUTC()));
         }
         @PostMapping(value = "/buy", produces = "application/json")
-        byte[] buy(@RequestBody byte[] body, HttpServletRequest request) {
+        byte[] buy(@RequestBody byte[] body, HttpServletRequest request) throws Exception {
             assertNull(request.getHeader("X-Agent-AOAT"));
             assertNull(request.getHeader("Authorization"));
-            calls.incrementAndGet(); return body;
+            calls.incrementAndGet();
+            if (downstream.uri() != null) {
+                var response = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build().send(
+                        HttpRequest.newBuilder(downstream.uri()).timeout(Duration.ofSeconds(5))
+                                .header("Content-Type", request.getContentType())
+                                .POST(HttpRequest.BodyPublishers.ofByteArray(body)).build(), HttpResponse.BodyHandlers.ofByteArray());
+                assertEquals(200, response.statusCode());
+                return response.body();
+            }
+            return body;
         }
     }
+
+    record Downstream(URI uri) { }
 
     private static HttpResponse<byte[]> send(HttpClient client, URI uri, String aoat, String wit, String proof, byte[] body) throws Exception {
         return client.send(HttpRequest.newBuilder(uri).timeout(Duration.ofSeconds(5))

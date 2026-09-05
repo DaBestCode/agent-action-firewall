@@ -27,10 +27,12 @@ The complete MCP frame contains, in order:
 5. tool name
 6. canonical argument-document bytes
 
-The MCP transport adapter is responsible for producing deterministic argument bytes. Until the
-MCP adapter defines and tests JSON Canonicalization Scheme handling, callers must not assume that
-semantically equivalent JSON encodings produce the same digest. Different encodings fail safely
-with a digest mismatch rather than broadening authorization.
+The MCP protocol adapter now defines [aaf-mcp-json-v1](mcp-canonicalization.md), a bounded safe-integer
+JSON subset. Use its `McpCallCanonicalizer` to produce deterministic argument bytes and the matching
+request to forward. It is not full RFC 8785 JCS. The raw-byte `McpToolAction` constructor remains for
+compatibility but does not validate canonical JSON; it is not an untrusted-input boundary.
+MCP authorization and transport forwarding are still planned. The digest algorithm remains action:v2:
+canonicalization fills its existing argument-bytes field; no framing or HTTP behavior changes.
 
 The rendered digest is `sha256:` followed by 64 lowercase hexadecimal characters. Any framing or
 normalization change requires a new domain version and new golden test vectors.

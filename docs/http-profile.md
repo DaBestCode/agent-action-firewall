@@ -123,11 +123,12 @@ not a proposed upstream contribution. The choice of a strict local profile is ou
 ## Verification
 
 Run `bash scripts/verify-open-agent-auth.sh --offline` after dependencies have been cached.
-The wrapper validates the upstream pin/checksums and runs all five modules. The embedded Boot test
+The wrapper validates the upstream pin/checksums and runs the reactor, now including MCP canonicalization. The embedded Boot test
 binds a temporary **127.0.0.1** port and closes its context on completion; sandboxed runners may need
 loopback-socket permission. It sends generated real signed credentials, observes tamper denial,
 one exact-body allowance, replay denial and missing-credential rejection, and checks service call
 count plus sanitized traces. No fixed private keys, tokens, models or containers are committed.
 
-Containerized/WireMock verification remains Day 10. Explorer, persistent traces, executable attack
-corpus and delegation remain later milestones; these tests do not replace them.
+Day 10 adds [containerized WireMock verification](http-integration.md) behind `--containers`.
+Explorer, persistent traces, executable attack corpus and delegation remain later milestones;
+these tests do not replace them.

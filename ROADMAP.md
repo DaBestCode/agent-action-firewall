@@ -3,11 +3,12 @@
 The plan assumes one focused developer and six weeks. Each week ends with a demonstrable, tested
 increment rather than a partially connected subsystem.
 
-Current progress: Days 1–7 pushed; Days 8–9 implemented locally for review. A deliberately narrow
-signed HTTP profile and a Spring Boot filter pass an embedded-server allow/tamper/replay test.
-This is an experimental firewall-specific profile, not full upstream-protocol conformance or a
-production deployment. See docs/http-profile.md for supported algorithms and transport constraints.
-Next: Days 10–11, containerized HTTP verification and MCP canonical JSON/action binding.
+Current progress: Days 1–9 pushed; Days 10–11 implemented locally for review. Real signed HTTP
+requests pass a Testcontainers/WireMock allow/deny flow. MCP tools/call extraction and bounded
+safe-integer JSON canonicalization are implemented, but no MCP forwarding or authorization is active.
+These are experimental firewall-specific profiles, not full protocol conformance or production deployment.
+See docs/http-integration.md and docs/mcp-canonicalization.md for evidence and restrictions.
+Next: Days 12–13, MCP interception/forwarding and PostgreSQL trace storage.
 
 ## Week 1 — contracts, threat model, and executable core
 

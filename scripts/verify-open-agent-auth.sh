@@ -21,7 +21,13 @@ parent_pom="$cache/repository/com/alibaba/openagentauth/open-agent-auth/$version
 [[ $(shasum -a 256 "$core_pom" | cut -d ' ' -f 1) == $(jq -er '.corePomSha256' "$lock") ]]
 [[ $(shasum -a 256 "$parent_pom" | cut -d ' ' -f 1) == $(jq -er '.parentPomSha256' "$lock") ]]
 offline=""
-if [[ ${1:-} == --offline ]]; then offline=-o; fi
-if [[ -n ${1:-} && ${1:-} != --offline ]]; then echo 'Unknown option' >&2; exit 1; fi
+profiles="open-agent-auth,mcp"
+for option in "$@"; do
+    case "$option" in
+        --offline) offline=-o ;;
+        --containers) profiles="$profiles,containers" ;;
+        *) echo 'Unknown option' >&2; exit 1 ;;
+    esac
+done
 mvn ${offline:+"$offline"} -B -ntp -nsu -f "$project_root/pom.xml" \
-    -Popen-agent-auth "-Dmaven.repo.local=$cache/repository" verify
+    "-P$profiles" "-Dmaven.repo.local=$cache/repository" verify

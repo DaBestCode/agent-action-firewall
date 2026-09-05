@@ -27,6 +27,10 @@
 
     <profiles>
         <profile>
+            <id>mcp</id>
+            <modules><module>firewall-protocol-mcp</module></modules>
+        </profile>
+        <profile>
             <id>open-agent-auth</id>
             <modules>
                 <module>firewall-adapter-open-agent-auth</module>

@@ -16,3 +16,10 @@ The optional HTTP gateway uses Spring Boot 3.3.11 and its managed dependencies, 
 upstream baseline for this compatibility experiment. Nimbus JOSE JWT supplies cryptographic
 verification inside the adapter. These are Maven dependencies, not copied source. This version
 selection is not a current vulnerability assessment; dependency/security updates must precede release.
+
+Day 10 adds test-only Testcontainers Java 2.0.5 (MIT) and the WireMock 3.13.1 Docker image
+(Apache-2.0), pinned by manifest digest in `WireMockGatewayIT`. Testcontainers' cleanup helper is
+managed by its versioned library; the WireMock pin does not claim to lock every helper image.
+Day 11 uses Jackson Core 2.17.3 (Apache-2.0) for bounded JSON parsing, matching the existing cache.
+Canonicalization/serialization code in this repository is original and covers only its documented
+safe-integer profile, not the complete RFC 8785 algorithm.

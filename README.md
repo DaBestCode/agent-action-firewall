@@ -12,7 +12,7 @@ The project is independent of its authorization engine. Its first engine adapter
 
 ## Current status
 
-Days 1–9 foundation and HTTP vertical slice:
+Days 1–11 foundation, HTTP vertical slice and MCP canonicalization:
 
 - Apache-2.0 project and Java 17 Maven structure
 - Framework-neutral `AgentAuthorizationEngine`
@@ -29,12 +29,15 @@ Days 1–9 foundation and HTTP vertical slice:
 - Public, narrowly scoped HTTP profile with real signatures, explicit bindings and exact-action policies
 - Signed action/token binding and atomic single-use proof enforcement
 - Spring Boot filter and localhost integration test with a protected service
+- Opt-in Testcontainers/WireMock verification with a digest-pinned downstream image
+- Bounded MCP tools/call canonicalization and action binding (no MCP proxy yet)
 - Initial attack-corpus JSON Schema and wrong-audience case
 - Architecture, threat model, upstream pin, and six-week delivery plan
 
 `firewall-core` and `firewall-testkit` are active by default. The Open Agent Auth adapter and HTTP
 gateway are opt-in through the guarded build below. Durable trace persistence, explorer and attack
 runner remain planned; the initial corpus files are not an executable security suite.
+The standalone `mcp` Maven profile enables JSON canonicalization without requiring Open Agent Auth.
 Use `firewall-testkit` only with test scope; it does not verify real credentials.
 
 ## Build
@@ -49,6 +52,9 @@ mvn -Dmaven.repo.local=.m2/repository verify
 
 # After building the pinned upstream core (see docs/open-agent-auth-adapter.md):
 bash scripts/verify-open-agent-auth.sh --offline
+
+# Explicit Docker integration run; first run needs the documented test dependencies/images:
+bash scripts/verify-open-agent-auth.sh --offline --containers
 ```
 
 The current build was verified with OpenJDK 17.0.20.1 and Maven 3.9.16. A repository-local Maven cache
@@ -73,6 +79,8 @@ keeps build artifacts out of the user profile. See [ROADMAP.md](ROADMAP.md) for 
 - [Week 1 API decisions and limitations](docs/decisions/0001-week-one-boundaries.md)
 - [Pinned build and internal adapter](docs/open-agent-auth-adapter.md)
 - [Signed HTTP profile and gateway limitations](docs/http-profile.md)
+- [HTTP container integration and evidence](docs/http-integration.md)
+- [MCP canonicalization profile and golden vector](docs/mcp-canonicalization.md)
 - [Threat model](docs/threat-model.md)
 - [Open Agent Auth pin](docs/upstream-pin.md)
 - [Machine-readable upstream lock](upstream/open-agent-auth.lock.json)

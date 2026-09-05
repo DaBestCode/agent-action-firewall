@@ -9,10 +9,10 @@ An eventual interceptor must authorize that action and forward **those bytes**, 
 rebuild a different request after authorization. `CanonicalToolCall.toString()` is redacted and
 rejections use a fixed message without parser causes or payload excerpts.
 
-This module only parses and canonicalizes. It does not execute tools, verify credentials, forward
-network traffic, manage MCP sessions or provide replay protection. The HTTP authorization profile
-still rejects MCP actions. Connecting enforcement is Day 12; canonicalization alone is not security
-authorization. The existing raw-byte `McpToolAction` constructor does not validate JSON.
+Canonicalization itself does not execute tools, verify credentials, manage MCP sessions or provide
+replay protection. Day 12 adds a transport-neutral [authorization proxy](mcp-proxy.md), but the HTTP
+authorization profile still rejects MCP actions and no network/MCP SDK adapter exists. The existing
+raw-byte `McpToolAction` constructor does not validate JSON.
 
 ## aaf-mcp-json-v1
 

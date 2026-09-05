@@ -3,12 +3,12 @@
 The plan assumes one focused developer and six weeks. Each week ends with a demonstrable, tested
 increment rather than a partially connected subsystem.
 
-Current progress: Days 1–9 pushed; Days 10–11 implemented locally for review. Real signed HTTP
-requests pass a Testcontainers/WireMock allow/deny flow. MCP tools/call extraction and bounded
-safe-integer JSON canonicalization are implemented, but no MCP forwarding or authorization is active.
-These are experimental firewall-specific profiles, not full protocol conformance or production deployment.
-See docs/http-integration.md and docs/mcp-canonicalization.md for evidence and restrictions.
-Next: Days 12–13, MCP interception/forwarding and PostgreSQL trace storage.
+Current progress: Days 1–11 pushed; Days 12–13 implemented locally for review. The transport-neutral
+MCP proxy authorizes canonical requests before forwarding. PostgreSQL stores explicit sanitized trace
+columns with checked migrations, exact nanosecond filtering and container integration tests.
+These remain experimental components, not a remotely deployable MCP gateway or production audit system.
+See docs/mcp-proxy.md and docs/postgres-traces.md for evidence and restrictions.
+Next: Days 14–15, trace query API/correlation and the first explorer interface.
 
 ## Week 1 — contracts, threat model, and executable core
 

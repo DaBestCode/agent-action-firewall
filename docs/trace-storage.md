@@ -1,7 +1,8 @@
 # Trace storage and data boundary
 
-Day 4 adds an in-memory implementation of `AuthorizationTraceRepository`. It is a development
-store, not durable audit evidence. `TraceRecord` wraps the existing event with schema version 1
+Day 4 adds an in-memory implementation of `AuthorizationTraceRepository`. Day 13 adds the optional
+[PostgreSQL implementation](postgres-traces.md). Neither alone establishes production-grade audit
+evidence. `TraceRecord` wraps the existing event with schema version 1
 and a receipt timestamp from the store's clock.
 
 The proposed JSON wire shape is in [trace-record.schema.json](schema/trace-record.schema.json).

@@ -23,3 +23,7 @@ managed by its versioned library; the WireMock pin does not claim to lock every 
 Day 11 uses Jackson Core 2.17.3 (Apache-2.0) for bounded JSON parsing, matching the existing cache.
 Canonicalization/serialization code in this repository is original and covers only its documented
 safe-integer profile, not the complete RFC 8785 algorithm.
+
+Day 13 uses pgJDBC 42.7.13 (BSD-2-Clause) and a test-only official PostgreSQL 17.11 Alpine image
+(PostgreSQL License), pinned by manifest digest. The selected driver includes the security fixes
+documented for 42.7.11 and 42.7.12; this does not replace a dependency scan or TLS configuration review.

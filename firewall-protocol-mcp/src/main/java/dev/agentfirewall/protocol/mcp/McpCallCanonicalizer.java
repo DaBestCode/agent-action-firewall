@@ -25,6 +25,6 @@ public final class McpCallCanonicalizer {
         var action = new McpToolAction(serverId, name, CanonicalJson.bytes(arguments));
         byte[] forward = CanonicalJson.bytes(Map.of("jsonrpc", "2.0", "id", id, "method", "tools/call",
                 "params", Map.of("name", name, "arguments", arguments)));
-        return new CanonicalToolCall(action, forward);
+        return new CanonicalToolCall(action, forward, CanonicalJson.bytes(id));
     }
 }

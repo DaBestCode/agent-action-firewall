@@ -21,7 +21,7 @@ parent_pom="$cache/repository/com/alibaba/openagentauth/open-agent-auth/$version
 [[ $(shasum -a 256 "$core_pom" | cut -d ' ' -f 1) == $(jq -er '.corePomSha256' "$lock") ]]
 [[ $(shasum -a 256 "$parent_pom" | cut -d ' ' -f 1) == $(jq -er '.parentPomSha256' "$lock") ]]
 offline=""
-profiles="open-agent-auth,mcp"
+profiles="open-agent-auth,mcp,postgres"
 for option in "$@"; do
     case "$option" in
         --offline) offline=-o ;;

@@ -28,7 +28,8 @@ dependency. Transport and vendor adapters depend on the core contract; the core 
 - `firewall-testkit`: reusable JUnit adapter contract and test-only deterministic engine. Never a runtime dependency.
 - `firewall-adapter-open-agent-auth`: pinned parsers/WPT validation behind a firewall-owned signed HTTP profile; an internal five-layer bridge remains separately tested.
 - `firewall-gateway-http`: explicit Spring Boot filter registration; depends only on core at runtime, with the signed adapter in integration tests. MCP transport is still planned.
-- `firewall-protocol-mcp`: standalone, bounded tools/call extraction and canonical argument bytes; depends only on core and Jackson Core, not upstream or Spring.
+- `firewall-protocol-mcp`: standalone tools/call canonicalization and authorize-before-forward proxy; depends only on core and Jackson Core, not upstream or Spring.
+- `firewall-trace-postgres`: explicit relational trace schema, checked migration and JDBC repository; pooling and tenant routing remain deployment responsibilities.
 - `firewall-trace-store`: sanitized trace persistence and queries. Planned for Week 3.
 - `firewall-attack-runner`: attack-corpus execution. Planned for Week 4.
 

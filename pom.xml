@@ -31,6 +31,10 @@
             <modules><module>firewall-protocol-mcp</module></modules>
         </profile>
         <profile>
+            <id>postgres</id>
+            <modules><module>firewall-trace-postgres</module></modules>
+        </profile>
+        <profile>
             <id>open-agent-auth</id>
             <modules>
                 <module>firewall-adapter-open-agent-auth</module>

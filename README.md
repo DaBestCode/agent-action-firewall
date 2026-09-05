@@ -12,7 +12,7 @@ The project is independent of its authorization engine. Its first engine adapter
 
 ## Current status
 
-Days 1–11 foundation, HTTP vertical slice and MCP canonicalization:
+Days 1–13 foundation, HTTP/MCP enforcement and trace persistence:
 
 - Apache-2.0 project and Java 17 Maven structure
 - Framework-neutral `AgentAuthorizationEngine`
@@ -31,13 +31,16 @@ Days 1–11 foundation, HTTP vertical slice and MCP canonicalization:
 - Spring Boot filter and localhost integration test with a protected service
 - Opt-in Testcontainers/WireMock verification with a digest-pinned downstream image
 - Bounded MCP tools/call canonicalization and action binding (no MCP proxy yet)
+- Transport-neutral MCP authorize-then-forward proxy with bounded, redacted failure handling
+- Explicit-schema PostgreSQL trace repository with checked transactional migration
 - Initial attack-corpus JSON Schema and wrong-audience case
 - Architecture, threat model, upstream pin, and six-week delivery plan
 
 `firewall-core` and `firewall-testkit` are active by default. The Open Agent Auth adapter and HTTP
 gateway are opt-in through the guarded build below. Durable trace persistence, explorer and attack
 runner remain planned; the initial corpus files are not an executable security suite.
-The standalone `mcp` Maven profile enables JSON canonicalization without requiring Open Agent Auth.
+The standalone `mcp` profile enables MCP enforcement without Open Agent Auth. The `postgres` profile
+enables JDBC trace storage. Its database integration suite runs only with explicit `--containers`.
 Use `firewall-testkit` only with test scope; it does not verify real credentials.
 
 ## Build
@@ -81,6 +84,8 @@ keeps build artifacts out of the user profile. See [ROADMAP.md](ROADMAP.md) for 
 - [Signed HTTP profile and gateway limitations](docs/http-profile.md)
 - [HTTP container integration and evidence](docs/http-integration.md)
 - [MCP canonicalization profile and golden vector](docs/mcp-canonicalization.md)
+- [MCP enforcement boundary](docs/mcp-proxy.md)
+- [PostgreSQL trace storage and migration](docs/postgres-traces.md)
 - [Threat model](docs/threat-model.md)
 - [Open Agent Auth pin](docs/upstream-pin.md)
 - [Machine-readable upstream lock](upstream/open-agent-auth.lock.json)
